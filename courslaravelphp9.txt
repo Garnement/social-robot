@@ -1,0 +1,145 @@
+
+// Commande Artisan pour créer le fichier de migration ~ une classe en PHP permettant de construire la table, il faudra exécuter le script pour que cela soit effectif
+
+$ php artisan make:migration create_categories_table --create=categories
+
+# le fichier nous permet de définir la structure de la table
+
+<?php
+
+class CreateCategoriesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+
+    	// CREATE TABLE categories
+        Schema::create('categories', function (Blueprint $table) {
+            $table->increments('id');  // id PK auto_increment  (PK: Primary Key)
+
+            $table->string('title', 100); // ici on définit un champ title VARCHAR(100)
+
+            $table->timestamps(); // deux champs qui sont ajoutés nécessaire pour le modèle de Laravel created_at et updated_at
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('categories');
+    }
+}
+
+?>
+
+Dans le terminal on lance maintenant la commande suivante pour créer la table categories
+
+$ php artisan migrate
+
+# commande avec options
+
+$ php artisan migrate:reset # supprime toutes les tables sauf la table migrations drop table
+
+
+$ php artisan migrate:refresh # supprime les tables puis ça recrée les tables
+
+
+Maintenant on va ajouter des données d'exemple dans les tables categories et tags à l'aide des seeders dans Laravel
+
+- On crée d'abord la classe des Seeders
+
+
+Exercice
+Trouvez le nom de la commande qui fait les Seeders dans la liste des commandes
+
+$ php artisan list | grep seeder
+
+Le grep trouvera en console
+
+ make:seeder          Create a new seeder class
+
+Puis essayez de comprendre le fonctionnement de cette méthode
+
+$ php artisan help make:seeder
+
+Trouvez la syntaxe de la commande pour créer les données d'exemple pour la table categories
+
+Une fois que l'on a créé la table de seeders
+
+$ php artisan make:seeder CategoriesTableSeeder
+
+
+Dans le dossier database/seeds le fichier suivant est créé:
+
+
+CategoriesTableSeeder.php
+
+
+Et dans ce fichier on utilisera par exemple la classe du framework DB qui va nous permettre d'insérer des données dans la table categories
+
+
+
+ DB::table('categories')->insert([
+                ['title' => 'Medical'],
+                ['title' => 'Space explorer'],
+                ['title' => 'Army'],
+        ]);
+
+
+Une dernière étape c'est d'indiquer au framework dans quel ordre on doit faire les seeders,
+
+dans la classe DatabaseSeeder on écrit dans la méthode run le code suivant qui va indiquer à Laravel d'exécuter la classe de seeders pour les catégories
+
+ $this->call(CategoriesTableSeeder::class);
+
+Pour exécuter ce script on peut faire en ligne de commande
+
+$ php artisan db:seed
+
+ou
+
+$ php artisan db:seed --class=CategoriesTableSeeder
+
+On peut également le faire en même temps que le reste
+
+$ php artisan migrate:refresh --seed
+
+
+
+# La table robots  sharecode en ligne https://codeshare.io/2Bwny5
+
+
+<?php
+
+class CreateRobotsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+
+		Schema::create('robots', function (Blueprint $table) {
+            $table->increments('id');
+
+
+
+            $table->timestamps();
+
+            });
+
+    }
+
+
+
+}
